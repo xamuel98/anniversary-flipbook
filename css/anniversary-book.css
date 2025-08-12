@@ -1,0 +1,419 @@
+@font-face {
+	font-family: 'Stempel-Garamond-W01-Roman';
+	font-style: normal;
+	font-weight: normal;
+	src: url('../fonts/Stempel-Garamond-W01-Roman.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'QEDSFont';
+	font-style: normal;
+	font-weight: normal;
+	src: url('../fonts/QEDSFont.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: 'QEJohnCaplin';
+	font-style: normal;
+	font-weight: normal;
+	src: url('../fonts/QEJohnCaplin.ttf') format('truetype');
+}
+
+:root {
+	font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+	line-height: 1.5;
+	font-weight: 400;
+
+	color-scheme: light dark;
+	color: rgba(255, 255, 255, 0.87);
+	background-color: #1a1a1a;
+
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+body,
+ul,
+table,
+form {
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+.animated {
+	-webkit-transition: margin-left 0.2s ease-in-out;
+	-moz-transition: margin-left 0.2s ease-in-out;
+	-o-transition: margin-left 0.2s ease-in-out;
+	-ms-transition: margin-left 0.2s ease-in-out;
+	transition: margin-left 0.2s ease-in-out;
+}
+
+#canvas {
+	/* width: 960px;
+	height: 600px; */
+	margin: 0 auto;
+	min-height: 100vh;
+	width: 100vw;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+    align-items: center;
+}
+
+#book-zoom {
+	-webkit-transition: -webkit-transform 1s;
+	-moz-transition: -moz-transform 1s;
+	-ms-transition: -ms-transform 1s;
+	-o-transition: -o-transform 1s;
+	transition: transform 1s;
+}
+
+.anniversary-book {
+	width: 960px;
+	height: 600px;
+}
+
+.anniversary-book h1 {
+	font-family: 'QEDSFont';
+	font-size: 22px;
+	font-weight: lighter;
+	margin: 20px 0;
+	color: #013b7a;
+	-webkit-text-fill-color: #013b7a;
+	-webkit-text-stroke-color: white;
+	-webkit-text-stroke-width: 0.005em;
+}
+
+.anniversary-book h2 {
+	font-family: "QEDSFont";
+	color: #013b7a;
+	font-size: 16px;
+	letter-spacing: 2px;
+	font-weight: 400;
+}
+
+.anniversary-book .book-content {
+	font-family: "QEDSFont";
+	color: #013b7a;
+	font-size: 16px;
+	margin: 70px 40px;
+}
+
+.anniversary-book blockquote {
+	color: #586078;
+	margin: 10px 0;
+	font-style: italic;
+}
+
+.anniversary-book blockquote:before {
+	content: "\201C";
+	color: #333D53;
+	font-size: 20px;
+}
+
+.anniversary-book blockquote:after {
+	content: "\201D";
+	color: #333D53;
+	font-size: 20px;
+}
+
+.anniversary-book cite {
+	font-family: "QEDSFont";
+	color: #013b7a;
+	font-size: 13px;
+	font-weight: 200;
+	font-style: normal;
+}
+
+.anniversary-book .book-content .center-pic {
+	margin: 0;
+	text-indent: 0;
+	text-align: center;
+}
+
+.anniversary-book .zoom-this:hover {
+	opacity: 0.9;
+	cursor: pointer;
+}
+
+.anniversary-book .book-content p {
+	text-indent: 18px;
+	margin: 20px 0;
+	line-height: 22px;
+}
+
+.anniversary-book .left-pic {
+	float: left;
+	margin-top: 15px;
+	margin-right: 15px;
+	margin-bottom: 15px;
+}
+
+.animated {
+	-webkit-transition: margin-left 0.2s ease-in-out;
+	-moz-transition: margin-left 0.2s ease-in-out;
+	-o-transition: margin-left 0.2s ease-in-out;
+	-ms-transition: margin-left 0.2s ease-in-out;
+	transition: margin-left 0.2s ease-in-out;
+}
+
+.anniversary-book .shadow {
+	-webkit-transition: -webkit-box-shadow 0.5s;
+	-moz-transition: -moz-box-shadow 0.5s;
+	-o-transition: -webkit-box-shadow 0.5s;
+	-ms-transition: -ms-box-shadow 0.5s;
+
+	-webkit-box-shadow: 0 0 10px #999;
+	-moz-box-shadow: 0 0 10px #999;
+	-ms-box-shadow: 0 0 10px #999;
+	-o-box-shadow: 0 0 10px #999;
+	box-shadow: 0 0 10px #999;
+}
+
+.anniversary-book .page {
+	/* -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+	-moz-box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+	-ms-box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+	-o-box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); */
+	border-radius: 3px;
+    overflow: hidden;
+    box-shadow: none !important;
+}
+
+.zoom-pic {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.2);
+	z-index: 999;
+}
+
+.zoom-pic img {
+	-webkit-box-shadow: 0 0 20px #999;
+	-moz-box-shadow: 0 0 20px #999;
+	-o-box-shadow: 0 0 20px #999;
+	-ms-box-shadow: 0 0 20px #999;
+	box-shadow: 0 0 20px #999;
+}
+
+.anniversary-book .p1,
+.anniversary-book .p2,
+.anniversary-book .p3,
+.anniversary-book .p27,
+.anniversary-book .p28 {
+	background-color: white;
+	background-image: url(../pics/book-covers.png) !important;
+}
+
+.anniversary-book .p1 {
+	background-position: 0 0;
+}
+
+.anniversary-book .p1 .side {
+	width: 5px;
+	height: 600px;
+	position: absolute;
+	top: 0;
+	left: 475px;
+
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #bbb), color-stop(0.5, #ddd), color-stop(1, #bbb));
+	background-image: -webkit-linear-gradient(left, #bbb, #ddd, #bbb);
+	background-image: -moz-linear-gradient(left, #bbb, #ddd, #bbb);
+	background-image: -ms-linear-gradient(left, #bbb, #ddd, #bbb);
+	background-image: -o-linear-gradient(left, #bbb, #ddd, #bbb);
+	background-image: linear-gradient(left, #bbb, #ddd, #bbb);
+
+	-webkit-transform: rotateY(-90deg);
+	-moz-transform: rotateY(-90deg);
+	-o-transform: rotateY(-90deg);
+	-ms-transform: rotateY(-90deg);
+	transform: rotateY(-90deg);
+
+	-webkit-transform-origin: top right;
+	-moz-transform-origin: top right;
+	-o-transform-origin: top right;
+	-ms-transform-origin: top right;
+	transform-origin: top right;
+	z-index: 100000;
+
+}
+
+.anniversary-book-transform div[page="1"]>div,
+.anniversary-book-transform div[page="2"]>div {
+	overflow: visible !important;
+}
+
+.anniversary-book .depth {
+	background-image: url(../pics/pages-depth.png);
+	position: absolute;
+	top: 7px;
+	width: 16px;
+	height: 590px;
+}
+
+.anniversary-book .front-side .depth {
+	left: 4px;
+	background-position: 0 0;
+}
+
+.anniversary-book .back-side .depth {
+	right: 4px;
+	background-position: right 0;
+}
+
+
+.anniversary-book .p2 {
+	background-position: -480px 0 !important;
+}
+
+.anniversary-book .p3 {
+	background-position: -1920px 0 !important;
+}
+
+.anniversary-book .p27 {
+	background-position: -960px 0 !important;
+}
+
+.anniversary-book .p28 {
+	background-position: -1440px 0 !important;
+}
+
+.anniversary-book .hard {
+	width: 480px;
+	height: 600px;
+	overflow: hidden;
+	background-color: transparent !important;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	-ms-box-shadow: none;
+	box-shadow: none;
+}
+
+.anniversary-book .page-wrapper {
+	-webkit-perspective: 2000px;
+	-moz-perspective: 2000px;
+	-ms-perspective: 2000px;
+	perspective: 2000px;
+}
+
+.anniversary-book .own-size {
+	width: 460px;
+	height: 582px;
+	background-color: white;
+	overflow: hidden;
+}
+
+.anniversary-book .even {
+	background: -webkit-gradient(linear, left top, right top, color-stop(0.95, #FDF7E6), color-stop(1, #EAD9B6));
+    background-image: -webkit-linear-gradient(left, #FDF7E6 95%, #EAD9B6 100%);
+    background-image: -moz-linear-gradient(left, #FDF7E6 95%, #EAD9B6 100%);
+    background-image: -ms-linear-gradient(left, #FDF7E6 95%, #EAD9B6 100%);
+    background-image: -o-linear-gradient(left, #FDF7E6 95%, #EAD9B6 100%);
+    background-image: linear-gradient(to right, #FDF7E6 95%, #EAD9B6 100%);
+}
+
+.anniversary-book .odd {
+	background: -webkit-gradient(linear, right top, left top, color-stop(0.95, #FDF7E6), color-stop(1, #EAD9B6));
+    background-image: -webkit-linear-gradient(right, #FDF7E6 95%, #EAD9B6 100%);
+    background-image: -moz-linear-gradient(right, #FDF7E6 95%, #EAD9B6 100%);
+    background-image: -ms-linear-gradient(right, #FDF7E6 95%, #EAD9B6 100%);
+    background-image: -o-linear-gradient(right, #FDF7E6 95%, #EAD9B6 100%);
+    background-image: linear-gradient(to left, #FDF7E6 95%, #EAD9B6 100%);
+}
+
+.anniversary-book .loader {
+	background-image: url(../pics/loader.gif);
+	width: 22px;
+	height: 22px;
+	position: absolute;
+	top: 280px;
+	left: 219px;
+}
+
+.anniversary-book .page-number {
+	font-family: "QEDSFont";
+	color: #013b7a;
+	width: 100%;
+	bottom: 25px;
+	position: absolute;
+	display: block;
+	text-align: center;
+	line-height: 30px;
+	font-size: 13px;
+}
+
+.anniversary-book .table-contents {
+	font-size: 16px;
+	width: 370px;
+	margin: 80px auto;
+	color: #ccc;
+}
+
+.anniversary-book .table-contents li {
+	list-style: none;
+	line-height: 25px;
+}
+
+.anniversary-book .table-contents span {
+	float: right;
+}
+
+.anniversary-book .table-contents a {
+	float: left;
+	width: 100%;
+	clear: both;
+	text-decoration: none;
+	color: #013b7a;
+	margin: 2px 0;
+	padding: 0;
+	font-family: 'QEJohnCaplin';
+	font-size: 25px;
+}
+
+.anniversary-book .table-contents a:hover {
+	background: #CAD1EE;
+	float: left;
+	width: 100%;
+	clear: both;
+	text-decoration: none;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	-o-border-radius: 10px;
+	-ms-border-radius: 10px;
+	border-radius: 10px;
+}
+
+.anniversary-book .book-content .capital,
+.anniversary-book .book-content .no-indent {
+	text-indent: 0;
+}
+
+.anniversary-book .capital:first-letter {
+	display: block;
+	float: left;
+	font-size: 300%;
+	line-height: 70%;
+	margin-right: 6px;
+	margin-top: 7px;
+	margin-left: 18px;
+}
+
+.ie8 .anniversary-book .even,
+.ie9 .anniversary-book .even {
+	background-image: url(../pics/gradient-page-left.jpg);
+	background-position: right top;
+	background-repeat: repeat-y;
+}
+
+.ie8 .anniversary-book .odd,
+.ie9 .anniversary-book .odd {
+	background-image: url(../pics/gradient-page-right.jpg);
+	background-position: left top;
+	background-repeat: repeat-y;
+}

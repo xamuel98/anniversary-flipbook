@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Happy 3rd Anniversary Damilola & Samuel</title>
+
+	<script type="text/javascript" src="extras/jquery.min.1.7.js"></script>
+	<script type="text/javascript" src="extras/jquery-ui-1.8.20.custom.min.js"></script>
+	<script type="text/javascript" src="extras/jquery.mousewheel.min.js"></script>
+	<script type="text/javascript" src="extras/modernizr.2.5.3.min.js"></script>
+	<script type="text/javascript" src="lib/hash.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+	<style>
+		/* Preloader Styles */
+		#preloader {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: #1a1a1a;
+			z-index: 9999;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			perspective: 1000px;
+		}
+
+		#progress-container {
+			position: absolute;
+			bottom: 40px;
+			left: 50%;
+			transform: translateX(-50%);
+			width: 300px;
+			height: 2px;
+			background: rgba(255, 255, 255, 0.2);
+			border-radius: 1px;
+			overflow: hidden;
+		}
+
+		#progress-bar {
+			width: 0%;
+			height: 100%;
+			background: linear-gradient(90deg, #ffffff, #f0f0f0);
+			border-radius: 1px;
+			transition: width 0.1s ease;
+		}
+
+		#counter-text {
+			position: absolute;
+			bottom: 55px;
+			left: 50%;
+			transform: translateX(-50%);
+			font-family: 'Georgia', 'Times New Roman', serif;
+			font-size: 0.9rem;
+			color: rgba(255, 255, 255, 0.7);
+			letter-spacing: 0.2em;
+			font-weight: normal;
+		}
+
+		.mask-overlay {
+			position: absolute;
+			background-size: contain;
+			background-repeat: no-repeat;
+			background-position: center;
+			z-index: 1002;
+			opacity: 0;
+			scale: 0;
+			pointer-events: none;
+		}
+
+		/* Keyboard Navigation Instructions */
+		#keyboard-nav-instructions {
+			width: 21rem;
+			position: fixed;
+			bottom: 20px;
+			left: 20px;
+			z-index: 1001;
+			background: transparent;
+			border: 1px solid white;
+			border-radius: 8px;
+			padding: 16px 24px;
+			color: white;
+			font-family: 'Arial', sans-serif;
+			font-size: 16px;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+			transition: opacity 0.3s ease;
+			display: none;
+			align-items: center;
+			gap: 16px;
+		}
+		
+		.nav-text {
+			font-size: 16px;
+			color: #ffffff;
+			font-weight: 400;
+			margin: 0;
+		}
+		
+		.arrow-keys {
+			display: flex;
+			gap: 8px;
+			align-items: center;
+		}
+		
+		.key-icon {
+			width: 40px;
+			height: 40px;
+			background: white;
+			border: 2px solid #ddd;
+			border-radius: 6px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		}
+		
+		.arrow {
+			font-size: 20px;
+			font-weight: bold;
+			color: #333;
+		}
+		
+		/* Desktop Only Message */
+		#desktop-only-message {
+			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: #1a1a1a;
+			z-index: 9999;
+			justify-content: center;
+			align-items: center;
+			padding: 20px;
+			box-sizing: border-box;
+		}
+		
+		.message-content {
+			text-align: center;
+			color: white;
+			max-width: 500px;
+			padding: 40px;
+		}
+
+		.message-content img {
+			width: 10rem;
+			border-radius: 3px 8px 8px 3px;
+		}
+		
+		.message-content p {
+			font-size: 14px;
+			line-height: 1.6;
+			margin-bottom: 16px;
+			color: rgba(255, 255, 255, 0.9);
+		}
+		
+		.message-content p:last-child {
+			margin-bottom: 0;
+		}
+		
+		/* Media Query for screens smaller than 1025px */
+		@media (max-width: 1024px) {
+			#desktop-only-message {
+				display: flex !important;
+			}
+			
+			#preloader,
+			#canvas {
+				display: none !important;
+			}
+		}
+
+		#mask-1a {
+			background-image: url('pics/mask-1.png');
+			width: 220px;
+			height: 220px;
+			top: 25%;
+			left: 15%;
+			transform: rotate(-15deg);
+		}
+
+		#mask-1b {
+			background-image: url('pics/mask-1.png');
+			width: 150px;
+			height: 150px;
+			top: 65%;
+			right: 20%;
+			transform: rotate(25deg);
+		}
+
+		#mask-2a {
+			background-image: url('pics/mask-2.png');
+			width: 200px;
+			height: 200px;
+			top: 30%;
+			right: 15%;
+			transform: rotate(45deg);
+		}
+
+		#mask-2b {
+			background-image: url('pics/mask-2.png');
+			width: 150px;
+			height: 150px;
+			top: 70%;
+			left: 25%;
+			transform: rotate(-30deg);
+		}
+
+		#mask-3a {
+			background-image: url('pics/mask-3.png');
+			width: 130px;
+			height: 130px;
+			top: 20%;
+			left: 70%;
+			transform: rotate(10deg);
+		}
+
+		#mask-3b {
+			background-image: url('pics/mask-3.png');
+			width: 170px;
+			height: 170px;
+			bottom: 25%;
+			left: 10%;
+			transform: rotate(-45deg);
+		}
+
+		#mask-4a {
+			background-image: url('pics/mask-4.png');
+			width: 145px;
+			height: 145px;
+			top: 60%;
+			right: 10%;
+			transform: rotate(60deg);
+		}
+
+		#mask-4b {
+			background-image: url('pics/mask-4.png');
+			width: 259px;
+			height: 259px;
+			bottom: 29%;
+			right: 38%;
+			transform: rotate(-20deg);
+		}
+
+		#preloader-text {
+			font-family: 'QEDSFont';
+			font-size: 10rem;
+			font-weight: bold;
+			color: white;
+			letter-spacing: 0.1em;
+			text-align: center;
+			line-height: 1.2;
+		}
+
+		.char {
+			display: inline-block;
+			opacity: 0;
+			transform: scale(0.5);
+		}
+
+		/* Main content initial position */
+		#canvas {
+			transform: translateY(100vh);
+			opacity: 0;
+		}
+
+		@media (max-width: 768px) {
+			#preloader-text {
+				font-size: 5rem;
+			}
+		}
+	</style>
+</head>
+
+<body>
+
+	<!-- Desktop Only Message -->
+	<div id="desktop-only-message">
+		<div class="message-content">
+			<img src="pics/book-front-cover.webp" alt="Book Cover">
+			<p>This interactive book is best experienced on a desktop computer.</p>
+			<p>Please visit this page on a device with a screen width of at least 1025px for the optimal experience.</p>
+		</div>
+	</div>
+
+	<!-- Preloader -->
+	<div id="preloader">
+		<div id="counter-text">000</div>
+		<div id="preloader-text">3 YEARS OF LOVE</div>
+		<div id="progress-container">
+			<div id="progress-bar"></div>
+		</div>
+		<!-- Mask overlays -->
+		<div id="mask-1a" class="mask-overlay"></div>
+		<div id="mask-1b" class="mask-overlay"></div>
+		<div id="mask-2a" class="mask-overlay"></div>
+		<div id="mask-2b" class="mask-overlay"></div>
+		<div id="mask-3a" class="mask-overlay"></div>
+		<div id="mask-3b" class="mask-overlay"></div>
+		<div id="mask-4a" class="mask-overlay"></div>
+		<div id="mask-4b" class="mask-overlay"></div>
+	</div>
+
+	<div id="canvas">
+		<div id="book-zoom">
+			<div class="anniversary-book">
+				<div depth="5" class="hard">
+					<div class="side"></div>
+				</div>
+				<div depth="5" class="hard front-side">
+					<div class="depth"></div>
+				</div>
+				<div class="own-size"></div>
+				<div class="own-size even"></div>
+				<div class="hard fixed back-side p27">
+					<div class="depth"></div>
+				</div>
+				<div class="hard p28"></div>
+			</div>
+		</div>
+		<!-- <div id="slider-bar" class="turnjs-slider">
+			<div id="slider"></div>
+		</div> -->
+		
+		<!-- Keyboard Navigation Instructions -->
+		<div id="keyboard-nav-instructions">
+			<span class="nav-text">Hey babe, use your arrow keys to flip through the book.</span>
+			<div class="arrow-keys">
+				<div class="key-icon left-key">
+					<span class="arrow">←</span>
+				</div>
+				<div class="key-icon right-key">
+					<span class="arrow">→</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<script type="text/javascript">
+		// Preloader Animation
+		function initPreloader() {
+			const preloaderText = document.getElementById('preloader-text');
+			const text = preloaderText.textContent;
+
+			// Split text into individual characters
+			preloaderText.innerHTML = text.split('').map(char =>
+				char === ' ' ? '<span class="char">&nbsp;</span>' : `<span class="char">${char}</span>`
+			).join('');
+
+			const chars = document.querySelectorAll('.char');
+			const canvas = document.getElementById('canvas');
+			const preloader = document.getElementById('preloader');
+			const progressBar = document.getElementById('progress-bar');
+			const counterText = document.getElementById('counter-text');
+
+			// Create counter object for animation
+			const counter = { value: 0 };
+
+			// Create GSAP timeline
+			const tl = gsap.timeline();
+
+			// Animate progress bar, counter, and characters simultaneously (slowed down)
+			tl.to(progressBar, {
+				width: "100%",
+				duration: 4.5,
+				ease: "power2.out"
+			})
+				.to(counter, {
+					value: 100,
+					duration: 4.5,
+					ease: "power2.out",
+					onUpdate: function () {
+						counterText.textContent = Math.floor(counter.value).toString().padStart(3, '0');
+					}
+				}, 0)
+				.to(chars, {
+					opacity: 1,
+					scale: 1,
+					duration: 1.2,
+					stagger: 0.08,
+					ease: "back.out(1.7)"
+				}, 0.5)
+				// Scale in mask images during loading
+				.fromTo('.mask-overlay', {
+					scale: 0,
+					opacity: 0
+				}, {
+					scale: 1,
+					opacity: 1,
+					duration: 0.8,
+					stagger: 0.15,
+					ease: "back.out(1.7)"
+				}, "-=3.5")
+				// Wait for 2 seconds after loading completes
+				.to({}, { duration: 2.0 })
+				// Fade out text and preloader
+				.to(chars, {
+					opacity: 0,
+					duration: 0.5,
+					ease: "power2.out"
+				})
+				.to(preloader, {
+					opacity: 0,
+					duration: 0.5,
+					ease: "power2.out"
+				}, "-=0.3")
+				// Slide in main content from bottom
+				.to(canvas, {
+					transform: "translateY(0)",
+					opacity: 1,
+					duration: 1.2,
+					ease: "power2.out"
+				}, "-=0.8")
+				// Remove preloader from DOM
+				.call(() => {
+					preloader.style.display = 'none';
+				});
+		}
+
+		// Initialize preloader when page loads
+		document.addEventListener('DOMContentLoaded', initPreloader);
+
+		// Create audio object for page turn sound
+		var pageTurnAudio = new Audio('audio/pageturn-102978.mp3');
+		pageTurnAudio.preload = 'auto';
+		pageTurnAudio.volume = 0.5; // Set volume to 50%
+
+		function playPageTurnSound() {
+			try {
+				pageTurnAudio.currentTime = 0; // Reset to beginning
+				pageTurnAudio.play();
+			} catch (e) {
+				console.log('Could not play page turn sound:', e);
+			}
+		}
+
+		function loadApp() {
+
+			var flipbook = $('.anniversary-book');
+
+			// Check if the CSS was already loaded
+
+			if (flipbook.width() == 0 || flipbook.height() == 0) {
+				setTimeout(loadApp, 10);
+				return;
+			}
+
+			// Mousewheel
+
+			$('#book-zoom').mousewheel(function (event, delta, deltaX, deltaY) {
+
+				var data = $(this).data(),
+					step = 30,
+					flipbook = $('.anniversary-book'),
+					actualPos = $('#slider').slider('value') * step;
+
+				if (typeof (data.scrollX) === 'undefined') {
+					data.scrollX = actualPos;
+					data.scrollPage = flipbook.turn('page');
+				}
+
+				data.scrollX = Math.min($("#slider").slider('option', 'max') * step,
+					Math.max(0, data.scrollX + deltaX));
+
+				var actualView = Math.round(data.scrollX / step),
+					page = Math.min(flipbook.turn('pages'), Math.max(1, actualView * 2 - 2));
+
+				if ($.inArray(data.scrollPage, flipbook.turn('view', page)) == -1) {
+					data.scrollPage = page;
+					flipbook.turn('page', page);
+				}
+
+				if (data.scrollTimer)
+					clearInterval(data.scrollTimer);
+
+				data.scrollTimer = setTimeout(function () {
+					data.scrollX = undefined;
+					data.scrollPage = undefined;
+					data.scrollTimer = undefined;
+				}, 1000);
+
+			});
+
+			// Slider
+
+			$("#slider").slider({
+				min: 1,
+				max: 100,
+
+				start: function (event, ui) {
+
+					if (!window._thumbPreview) {
+						_thumbPreview = $('<div />', { 'class': 'thumbnail' }).html('<div></div>');
+						setPreview(ui.value);
+						_thumbPreview.appendTo($(ui.handle));
+					} else
+						setPreview(ui.value);
+
+					moveBar(false);
+
+				},
+
+				slide: function (event, ui) {
+
+					setPreview(ui.value);
+
+				},
+
+				stop: function () {
+
+					if (window._thumbPreview)
+						_thumbPreview.removeClass('show');
+
+					$('.anniversary-book').turn('page', Math.max(1, $(this).slider('value') * 2 - 2));
+
+				}
+			});
+
+
+			// URIs
+
+			Hash.on('^page\/([0-9]*)$', {
+				yep: function (path, parts) {
+
+					var page = parts[1];
+
+					if (page !== undefined) {
+						if ($('.anniversary-book').turn('is'))
+							$('.anniversary-book').turn('page', page);
+					}
+
+				},
+				nop: function (path) {
+
+					if ($('.anniversary-book').turn('is'))
+						$('.anniversary-book').turn('page', 1);
+				}
+			});
+
+			// Arrows
+
+			$(document).keydown(function (e) {
+
+				var previous = 37, next = 39;
+
+				switch (e.keyCode) {
+					case previous:
+
+						$('.anniversary-book').turn('previous');
+
+						break;
+					case next:
+
+						$('.anniversary-book').turn('next');
+
+						break;
+				}
+
+			});
+
+
+			// Flipbook
+
+			flipbook.bind(($.isTouch) ? 'touchend' : 'click', zoomHandle);
+
+			flipbook.turn({
+				elevation: 50,
+				acceleration: !isChrome(),
+				autoCenter: true,
+				gradients: true,
+				duration: 1000,
+				pages: 28,
+				when: {
+					turning: function (e, page, view) {
+
+						var book = $(this),
+							currentPage = book.turn('page'),
+							pages = book.turn('pages');
+
+						if (currentPage > 3 && currentPage < pages - 3) {
+
+							if (page == 1) {
+								book.turn('page', 2).turn('stop').turn('page', page);
+								e.preventDefault();
+								return;
+							} else if (page == pages) {
+								book.turn('page', pages - 1).turn('stop').turn('page', page);
+								e.preventDefault();
+								return;
+							}
+						} else if (page > 3 && page < pages - 3) {
+							if (currentPage == 1) {
+								book.turn('page', 2).turn('stop').turn('page', page);
+								e.preventDefault();
+								return;
+							} else if (currentPage == pages) {
+								book.turn('page', pages - 1).turn('stop').turn('page', page);
+								e.preventDefault();
+								return;
+							}
+						}
+
+						updateDepth(book, page);
+
+						if (page >= 2)
+							$('.anniversary-book .p2').addClass('fixed');
+						else
+							$('.anniversary-book .p2').removeClass('fixed');
+
+						if (page < book.turn('pages'))
+							$('.anniversary-book .p27').addClass('fixed');
+						else
+							$('.anniversary-book .p27').removeClass('fixed');
+
+						Hash.go('page/' + page).update();
+
+						// Play page turn sound
+						playPageTurnSound();
+
+					},
+
+					turned: function (e, page, view) {
+
+						var book = $(this);
+
+						if (page == 2 || page == 3) {
+							book.turn('peel', 'br');
+						}
+
+						updateDepth(book);
+
+						$('#slider').slider('value', getViewNumber(book, page));
+
+						book.turn('center');
+
+					},
+
+					start: function (e, pageObj) {
+
+						moveBar(true);
+
+					},
+
+					end: function (e, pageObj) {
+
+						var book = $(this);
+
+						updateDepth(book);
+
+						setTimeout(function () {
+
+							$('#slider').slider('value', getViewNumber(book));
+
+						}, 1);
+
+						moveBar(false);
+
+					},
+
+					missing: function (e, pages) {
+
+						for (var i = 0; i < pages.length; i++) {
+							addPage(pages[i], $(this));
+						}
+
+					}
+				}
+			});
+
+
+			$('#slider').slider('option', 'max', numberOfViews(flipbook));
+
+			flipbook.addClass('animated');
+
+			// Show canvas
+
+			$('#canvas').css({ visibility: '' });
+			
+			// Show keyboard navigation instructions
+			$('#keyboard-nav-instructions').css('display', 'flex').hide().fadeIn(500);
+		}
+
+		// Hide canvas
+
+		$('#canvas').css({ visibility: 'hidden' });
+
+		// Load turn.js
+
+		yepnope({
+			test: Modernizr.csstransforms,
+			yep: ['lib/turn.min.js'],
+			nope: ['lib/turn.html4.min.js', 'css/jquery.ui.html4.css', 'css/anniversary-book-html4.css'],
+			both: ['js/anniversary-book.js', 'css/jquery.ui.css', 'css/anniversary-book.css'],
+			complete: loadApp
+		});
+
+	</script>
+
+</body>
+
+</html>
